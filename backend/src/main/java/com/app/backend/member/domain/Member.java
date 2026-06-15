@@ -1,5 +1,6 @@
 package com.app.backend.member.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -32,12 +33,19 @@ public class Member {
     private Nickname nickname;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MemberRole role;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private MemberStatus status;
 
-    private Member(Email email, Phone phone, Nickname nickname, MemberStatus status) {
+    private Member(Email email, Phone phone, Nickname nickname, MemberRole role,
+            MemberStatus status) {
         this.email = email;
         this.phone = phone;
         this.nickname = nickname;
+        this.role = role;
         this.status = status;
     }
 
@@ -48,6 +56,7 @@ public class Member {
                 email,
                 phone,
                 nickname,
+                MemberRole.MEMBER,
                 MemberStatus.ACTIVE
         );
     }
@@ -62,7 +71,6 @@ public class Member {
         }
     }
 
-
     public void activate() {
         this.status = MemberStatus.ACTIVE;
     }
@@ -71,4 +79,15 @@ public class Member {
         return this.status == MemberStatus.ACTIVE;
     }
 
+    public void changeRole(MemberRole role) {
+        this.role = role;
+    }
+
+    public void changeNickname(Nickname nickname) {
+        if (nickname == null) {
+            throw new IllegalArgumentException("회원: 닉네임은 필수입니다.");
+        }
+
+        this.nickname = nickname;
+    }
 }

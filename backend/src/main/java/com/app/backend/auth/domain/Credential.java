@@ -27,12 +27,12 @@ public class Credential {
     @Column(name = "password", nullable = false)
     private String encodedPassword;
 
-    public Credential(Long memberId, String encodedPassword) {
+    private Credential(Long memberId, String encodedPassword) {
         this.memberId = memberId;
         this.encodedPassword = encodedPassword;
     }
 
-    private static Credential create(Long memberId, String encodedPassword) {
+    public static Credential create(Long memberId, String encodedPassword) {
         validate(memberId, encodedPassword);
 
         return new Credential(memberId, encodedPassword);
