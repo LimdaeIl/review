@@ -1,5 +1,7 @@
 package com.app.backend.member.domain;
 
+import com.app.backend.member.exception.MemberErrorCode;
+import com.app.backend.member.exception.MemberException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -31,11 +33,11 @@ public class Nickname {
 
     private static void validate(String value) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException("회원: 닉네임은 필수입니다.");
+            throw new MemberException(MemberErrorCode.INVALID_NICKNAME);
         }
 
         if (value.length() > 12 || value.length() < 2) {
-            throw new IllegalArgumentException("회원: 닉네임은 2자 이상 12자 이하로 입력해주세요.");
+            throw new MemberException(MemberErrorCode.INVALID_NICKNAME_LENGTH);
         }
     }
 }

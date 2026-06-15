@@ -1,12 +1,13 @@
 package com.app.backend.member.domain;
 
+import com.app.backend.member.exception.MemberErrorCode;
+import com.app.backend.member.exception.MemberException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.regex.Pattern;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,15 +37,15 @@ public class Email {
 
     private static void validate(String value) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException("회원: 이메일은 필수입니다.");
+            throw new MemberException(MemberErrorCode.INVALID_EMAIL);
         }
 
         if (value.length() > 100) {
-            throw new IllegalArgumentException("회원: 이메일은 100자 이하로 입력해주세요.");
+            throw new MemberException(MemberErrorCode.INVALID_EMAIL_LENGTH);
         }
 
         if (!EMAIL_PATTERN.matcher(value).matches()) {
-            throw new IllegalArgumentException("회원: 올바른 이메일 형식이 아닙니다.");
+            throw new MemberException(MemberErrorCode.INVALID_EMAIL_FORMAT);
         }
     }
 }
