@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/windows,macos,netbeans,gradle,java,react,redis,intellij+all,pycharm+all,webstorm+all,data,database,git
-# Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,netbeans,gradle,java,react,redis,intellij+all,pycharm+all,webstorm+all,data,database,git
+# Created by https://www.toptal.com/developers/gitignore/api/windows,macos,netbeans,gradle,java,react,redis,intellij+all,pycharm+all,webstorm+all,data,database,git,dotenv
+# Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,netbeans,gradle,java,react,redis,intellij+all,pycharm+all,webstorm+all,data,database,git,dotenv
 
 ### Data ###
 *.csv
@@ -24,6 +24,9 @@
 *.sqlite3
 *.db-shm
 *.db-wal
+
+### dotenv ###
+.env
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:
@@ -74,14 +77,15 @@
 # When using Gradle or Maven with auto-import, you should exclude module files,
 # since they will be recreated, and may cause churn.  Uncomment if using
 # auto-import.
-# .idea/artifacts
-# .idea/compiler.xml
-# .idea/jarRepositories.xml
-# .idea/modules.xml
-# .idea/*.iml
-# .idea/modules
-# *.iml
-# *.ipr
+.idea/artifacts
+.idea/compiler.xml
+.idea/jarRepositories.xml
+.idea/modules.xml
+.idea/*.iml
+.idea/modules
+*.iml
+*.ipr
+
 
 # CMake
 cmake-build-*/
@@ -380,4 +384,4 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
-# End of https://www.toptal.com/developers/gitignore/api/windows,macos,netbeans,gradle,java,react,redis,intellij+all,pycharm+all,webstorm+all,data,database,git
+# End of https://www.toptal.com/developers/gitignore/api/windows,macos,netbeans,gradle,java,react,redis,intellij+all,pycharm+all,webstorm+all,data,database,git,dotenv
