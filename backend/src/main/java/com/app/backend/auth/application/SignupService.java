@@ -8,6 +8,7 @@ import com.app.backend.member.application.MemberCommandService;
 import com.app.backend.member.application.command.CreateMemberCommand;
 import com.app.backend.member.application.result.CreateMemberResult;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class SignupService {
 
     private final CredentialRepository credentialRepository;
+
     private final MemberCommandService memberCommandService;
+    private final PasswordEncoder passwordEncoder;
 
     public SignupResult signup(SignupCommand command) {
         CreateMemberResult member = memberCommandService.create(
@@ -30,7 +33,7 @@ public class SignupService {
 
         Credential credential = Credential.create(
                 member.memberId(),
-                command.password()
+                passwordEncoder.encode(command.password())
         );
 
         credentialRepository.save(credential);
