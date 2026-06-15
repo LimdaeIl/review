@@ -7,6 +7,8 @@ import com.app.backend.member.domain.Member;
 import com.app.backend.member.domain.MemberRepository;
 import com.app.backend.member.domain.Nickname;
 import com.app.backend.member.domain.Phone;
+import com.app.backend.member.exception.MemberErrorCode;
+import com.app.backend.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,33 +35,31 @@ public class MemberCommandService {
 
     public void changeNickname(Long memberId, String nicknameValue) {
         Member member = getMember(memberId);
-
         Nickname nickname = Nickname.create(nicknameValue);
 
         if (memberRepository.existsByNickname(nickname)) {
-            throw new IllegalArgumentException("회원: 이미 사용 중인 닉네임입니다.");
+            throw new MemberException(MemberErrorCode.DUPLICATE_NICKNAME);
         }
 
         member.changeNickname(nickname);
     }
 
-
     private Member getMember(Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원: 존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
     }
 
     private void validateDuplicate(Email email, Phone phone, Nickname nickname) {
         if (memberRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException("회원: 이미 가입된 이메일입니다.");
+            throw new MemberException(MemberErrorCode.DUPLICATE_EMAIL);
         }
 
         if (phone != null && memberRepository.existsByPhone(phone)) {
-            throw new IllegalArgumentException("회원: 이미 사용 중인 휴대폰 번호입니다.");
+            throw new MemberException(MemberErrorCode.DUPLICATE_PHONE);
         }
 
         if (memberRepository.existsByNickname(nickname)) {
-            throw new IllegalArgumentException("회원: 이미 사용 중인 닉네임입니다.");
+            throw new MemberException(MemberErrorCode.DUPLICATE_NICKNAME);
         }
     }
 }

@@ -1,0 +1,31 @@
+package com.app.backend.auth.exception;
+
+import com.app.backend.common.exception.ErrorCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+
+@Getter
+@RequiredArgsConstructor
+public enum AuthErrorCode implements ErrorCode {
+
+    INVALID_MEMBER_ID(HttpStatus.BAD_REQUEST, "인증: 회원 ID는 필수입니다."),
+    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "인증: 비밀번호는 필수입니다."),
+
+    INVALID_LOGIN(HttpStatus.UNAUTHORIZED, "인증: 이메일 또는 비밀번호가 올바르지 않습니다."),
+    INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "인증: Access Token이 유효하지 않습니다."),
+    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "인증: Refresh Token이 유효하지 않습니다.");
+
+    private final HttpStatus httpStatus;
+    private final String messageTemplate;
+
+    @Override
+    public HttpStatus status() {
+        return httpStatus;
+    }
+
+    @Override
+    public String message() {
+        return messageTemplate;
+    }
+}

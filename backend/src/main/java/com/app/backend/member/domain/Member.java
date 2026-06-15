@@ -1,5 +1,7 @@
 package com.app.backend.member.domain;
 
+import com.app.backend.member.exception.MemberErrorCode;
+import com.app.backend.member.exception.MemberException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -63,11 +65,11 @@ public class Member {
 
     private static void validate(Email email, Nickname nickname) {
         if (email == null) {
-            throw new IllegalArgumentException("회원: 이메일은 필수입니다.");
+            throw new MemberException(MemberErrorCode.INVALID_EMAIL);
         }
 
         if (nickname == null) {
-            throw new IllegalArgumentException("회원: 닉네임은 필수입니다.");
+            throw new MemberException(MemberErrorCode.INVALID_NICKNAME);
         }
     }
 
@@ -80,12 +82,16 @@ public class Member {
     }
 
     public void changeRole(MemberRole role) {
+        if (role == null) {
+            throw new MemberException(MemberErrorCode.INVALID_ROLE);
+        }
+
         this.role = role;
     }
 
     public void changeNickname(Nickname nickname) {
         if (nickname == null) {
-            throw new IllegalArgumentException("회원: 닉네임은 필수입니다.");
+            throw new MemberException(MemberErrorCode.INVALID_NICKNAME);
         }
 
         this.nickname = nickname;
