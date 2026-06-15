@@ -1,5 +1,8 @@
 package com.app.backend.auth.domain;
 
+import com.app.backend.auth.exception.AuthErrorCode;
+import com.app.backend.auth.exception.AuthException;
+import com.app.backend.common.audit.BaseAuditEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "v1_credentials")
 @Entity
-public class Credential {
+public class Credential extends BaseAuditEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,11 +43,11 @@ public class Credential {
 
     public static void validate(Long memberId, String encodedPassword) {
         if (memberId == null) {
-            throw new IllegalArgumentException("인증: 회원 ID는 필수입니다.");
+            throw new AuthException(AuthErrorCode.INVALID_MEMBER_ID);
         }
 
         if (encodedPassword == null || encodedPassword.isBlank()) {
-            throw new IllegalArgumentException("인증: 비밀번호는 필수입니다.");
+            throw new AuthException(AuthErrorCode.INVALID_PASSWORD);
         }
     }
 }

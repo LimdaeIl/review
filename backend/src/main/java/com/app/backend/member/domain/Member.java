@@ -1,5 +1,6 @@
 package com.app.backend.member.domain;
 
+import com.app.backend.common.audit.BaseAuditEntity;
 import com.app.backend.member.exception.MemberErrorCode;
 import com.app.backend.member.exception.MemberException;
 import jakarta.persistence.Column;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "v1_members")
 @Entity
-public class Member {
+public class Member extends BaseAuditEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
