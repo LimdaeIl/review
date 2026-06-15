@@ -4,6 +4,7 @@ import com.app.backend.member.domain.Email;
 import com.app.backend.member.domain.Member;
 import com.app.backend.member.domain.Nickname;
 import com.app.backend.member.domain.Phone;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JpaMemberRepository extends JpaRepository<Member, Long> {
@@ -13,4 +14,6 @@ public interface JpaMemberRepository extends JpaRepository<Member, Long> {
     boolean existsByPhone(Phone phone);
 
     boolean existsByNickname(Nickname nickname);
+
+    Optional<Member> findByEmail(Email email);
 }

@@ -13,4 +13,6 @@ public interface MemberRepository {
     boolean existsByNickname(Nickname nickname);
 
     Optional<Member> findById(Long id);
+
+    Optional<Member> findByEmail(Email email);
 }
