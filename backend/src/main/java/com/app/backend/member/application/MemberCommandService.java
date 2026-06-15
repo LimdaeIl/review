@@ -1,5 +1,6 @@
 package com.app.backend.member.application;
 
+import com.app.backend.auth.application.result.LoginResult;
 import com.app.backend.member.application.command.CreateMemberCommand;
 import com.app.backend.member.application.result.CreateMemberResult;
 import com.app.backend.member.domain.Email;

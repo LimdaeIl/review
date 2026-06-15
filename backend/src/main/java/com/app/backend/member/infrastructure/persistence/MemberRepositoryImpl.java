@@ -40,4 +40,9 @@ public class MemberRepositoryImpl implements MemberRepository {
     public Optional<Member> findById(Long id) {
         return repository.findById(id);
     }
+
+    @Override
+    public Optional<Member> findByEmail(Email email) {
+        return repository.findByEmail(email);
+    }
 }

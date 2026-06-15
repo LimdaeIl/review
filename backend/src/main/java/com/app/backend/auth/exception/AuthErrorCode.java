@@ -17,7 +17,8 @@ public enum AuthErrorCode implements ErrorCode {
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "인증: Refresh Token이 유효하지 않습니다."),
     EXPIRED_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "인증: Access Token이 만료되었습니다."),
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "인증: Refresh Token이 만료되었습니다."),
-    INVALID_TOKEN_TYPE(HttpStatus.UNAUTHORIZED, "인증: 토큰 타입이 올바르지 않습니다.");
+    INVALID_TOKEN_TYPE(HttpStatus.UNAUTHORIZED, "인증: 토큰 타입이 올바르지 않습니다."),
+    INACTIVE_MEMBER(HttpStatus.FORBIDDEN, "인증: 비활성화된 회원입니다."),;
 
     private final HttpStatus httpStatus;
     private final String messageTemplate;

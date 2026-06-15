@@ -54,21 +54,59 @@ public class JwtProvider {
     }
 
     public void validateAccessToken(String token) {
-        Claims claims = parseClaims(token);
+        Claims claims = parseClaims(
+                token,
+                AuthErrorCode.EXPIRED_ACCESS_TOKEN,
+                AuthErrorCode.INVALID_ACCESS_TOKEN
+        );
+
         validateTokenType(claims, ACCESS_TOKEN);
     }
 
     public void validateRefreshToken(String token) {
-        Claims claims = parseClaims(token);
+        Claims claims = parseClaims(
+                token,
+                AuthErrorCode.EXPIRED_REFRESH_TOKEN,
+                AuthErrorCode.INVALID_REFRESH_TOKEN
+        );
+
         validateTokenType(claims, REFRESH_TOKEN);
     }
 
-    public Long getMemberId(String token) {
-        return Long.valueOf(parseClaims(token).getSubject());
+    public Long getMemberIdFromAccessToken(String token) {
+        Claims claims = parseClaims(
+                token,
+                AuthErrorCode.EXPIRED_ACCESS_TOKEN,
+                AuthErrorCode.INVALID_ACCESS_TOKEN
+        );
+
+        validateTokenType(claims, ACCESS_TOKEN);
+
+        return Long.valueOf(claims.getSubject());
     }
 
-    public String getRole(String token) {
-        return parseClaims(token).get(ROLE_CLAIM, String.class);
+    public Long getMemberIdFromRefreshToken(String token) {
+        Claims claims = parseClaims(
+                token,
+                AuthErrorCode.EXPIRED_REFRESH_TOKEN,
+                AuthErrorCode.INVALID_REFRESH_TOKEN
+        );
+
+        validateTokenType(claims, REFRESH_TOKEN);
+
+        return Long.valueOf(claims.getSubject());
+    }
+
+    public String getRoleFromAccessToken(String token) {
+        Claims claims = parseClaims(
+                token,
+                AuthErrorCode.EXPIRED_ACCESS_TOKEN,
+                AuthErrorCode.INVALID_ACCESS_TOKEN
+        );
+
+        validateTokenType(claims, ACCESS_TOKEN);
+
+        return claims.get(ROLE_CLAIM, String.class);
     }
 
     public long getAccessTokenExpirationMillis() {
@@ -77,6 +115,10 @@ public class JwtProvider {
 
     public long getRefreshTokenExpirationMillis() {
         return jwtProperties.refreshTokenExpirationMillis();
+    }
+
+    public long getRefreshTokenExpirationSeconds() {
+        return jwtProperties.refreshTokenExpirationMillis() / 1000;
     }
 
     private String createToken(
@@ -104,7 +146,11 @@ public class JwtProvider {
                 .compact();
     }
 
-    private Claims parseClaims(String token) {
+    private Claims parseClaims(
+            String token,
+            AuthErrorCode expiredErrorCode,
+            AuthErrorCode invalidErrorCode
+    ) {
         try {
             return Jwts.parser()
                     .verifyWith(secretKey)
@@ -112,9 +158,9 @@ public class JwtProvider {
                     .parseSignedClaims(token)
                     .getPayload();
         } catch (ExpiredJwtException e) {
-            throw new AuthException(AuthErrorCode.EXPIRED_ACCESS_TOKEN);
+            throw new AuthException(expiredErrorCode);
         } catch (JwtException | IllegalArgumentException e) {
-            throw new AuthException(AuthErrorCode.INVALID_ACCESS_TOKEN);
+            throw new AuthException(invalidErrorCode);
         }
     }
 
