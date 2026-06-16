@@ -14,11 +14,12 @@ public class JWTHashUtil {
     public String sha256(String token) {
         try {
             MessageDigest digest = MessageDigest.getInstance(SHA_256);
-            byte[] hashed = digest.digest(token.getBytes(StandardCharsets.UTF_8));
 
-            return HexFormat.of().formatHex(hashed);
+            return HexFormat.of()
+                    .formatHex(digest.digest(token.getBytes(StandardCharsets.UTF_8)));
+
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("SHA-256 알고리즘이 유효하지 않습니다.", e);
+            throw new AssertionError("SHA-256 algorithm must be available", e);
         }
     }
 }

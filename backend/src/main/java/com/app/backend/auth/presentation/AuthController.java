@@ -34,7 +34,7 @@ public class AuthController {
         SignupResult result = signupService.signup(request.toCommand());
 
         return CommonResponse.created(
-                "인증/인가: 회원 가입이 완료되었습니다.",
+                "회원가입: 회원 가입이 완료되었습니다.",
                 SignupResponse.from(result)
         );
     }
@@ -53,8 +53,11 @@ public class AuthController {
         );
 
         return CommonResponse.success(
-                "인증/인가: 로그인에 성공하였습니다.",
+                "로그인: 로그인에 성공하였습니다.",
                 LoginResponse.from(result)
         );
     }
+
+    // TODO: 토큰 재발급, 로그아웃, 카카오 로그인 추가
+
 }
