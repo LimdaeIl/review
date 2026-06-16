@@ -173,8 +173,4 @@ public class JwtProvider {
             throw new AuthException(AuthErrorCode.INVALID_TOKEN_TYPE);
         }
     }
-
-    private Date now() {
-        return Date.from(clock.instant());
-    }
 }
