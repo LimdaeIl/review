@@ -9,6 +9,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 import javax.crypto.SecretKey;
@@ -40,7 +42,7 @@ public class JwtProvider {
                 memberId,
                 ACCESS_TOKEN,
                 role,
-                jwtProperties.accessTokenExpirationMillis()
+                jwtProperties.accessTokenExpiration()
         );
     }
 
@@ -49,7 +51,7 @@ public class JwtProvider {
                 memberId,
                 REFRESH_TOKEN,
                 null,
-                jwtProperties.refreshTokenExpirationMillis()
+                jwtProperties.refreshTokenExpiration()
         );
     }
 
@@ -110,32 +112,32 @@ public class JwtProvider {
     }
 
     public long getAccessTokenExpirationMillis() {
-        return jwtProperties.accessTokenExpirationMillis();
+        return jwtProperties.accessTokenExpiration().toMillis();
     }
 
     public long getRefreshTokenExpirationMillis() {
-        return jwtProperties.refreshTokenExpirationMillis();
+        return jwtProperties.refreshTokenExpiration().toMillis();
     }
 
     public long getRefreshTokenExpirationSeconds() {
-        return jwtProperties.refreshTokenExpirationMillis() / 1000;
+        return jwtProperties.refreshTokenExpiration().toSeconds();
     }
 
     private String createToken(
             Long memberId,
             String tokenType,
             String role,
-            long expirationMillis
+            Duration expirationDuration
     ) {
-        Date now = now();
-        Date expiration = new Date(now.getTime() + expirationMillis);
+        Instant now = clock.instant();
+        Instant expiration = now.plus(expirationDuration);
 
         var builder = Jwts.builder()
                 .id(UUID.randomUUID().toString())
                 .subject(String.valueOf(memberId))
                 .claim(TOKEN_TYPE_CLAIM, tokenType)
-                .issuedAt(now)
-                .expiration(expiration);
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(expiration));
 
         if (role != null && !role.isBlank()) {
             builder.claim(ROLE_CLAIM, role);
