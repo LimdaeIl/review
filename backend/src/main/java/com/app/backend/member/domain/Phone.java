@@ -24,6 +24,10 @@ public class Phone {
         this.phone = phone;
     }
 
+    public String getValue() {
+        return this.phone;
+    }
+
     public static Phone create(String value) {
         String normalized = normalize(value);
 
