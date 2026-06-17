@@ -45,7 +45,7 @@ public class MemberCommandService {
         member.changeNickname(nickname);
     }
 
-    private Member getMember(Long memberId) {
+    public Member getMember(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
     }
