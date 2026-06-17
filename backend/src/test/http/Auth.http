@@ -1,0 +1,23 @@
+### 회원가입
+POST http://localhost:8080/api/v1/auth/signup
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password1234!",
+  "phone": "01012345678",
+  "nickname": "testuser"
+}
+
+### 로그인
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password1234!"
+}
+
+### 토큰 재발급
+POST http://localhost:8080/api/v1/auth/reissue
+Cookie: refreshToken=eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJiOTVlYWZmZC1jYTkyLTQ1OWUtODJiMy02NWUwMzkxMGEyNmMiLCJzdWIiOiIxIiwidG9rZW5UeXBlIjoiUkVGUkVTSCIsImlhdCI6MTc4MTY2NjA3NywiZXhwIjoxNzgyMjcwODc3fQ.sBaqnUhXQwdPdwd-d4AtLPgb_c-9mkNyxDZzUFaQ_8sJO9zlDlcUQwJYdlbiDJ7osNiWgUMNfjE6dzeH4YthNw
