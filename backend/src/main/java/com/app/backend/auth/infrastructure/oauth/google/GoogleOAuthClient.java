@@ -1,7 +1,10 @@
-package com.app.backend.auth.infrastructure.oauth;
+package com.app.backend.auth.infrastructure.oauth.google;
 
 import com.app.backend.auth.domain.OAuthProvider;
 import com.app.backend.auth.domain.OAuthUserInfo;
+import com.app.backend.auth.infrastructure.oauth.OAuthClient;
+import com.app.backend.auth.infrastructure.oauth.OAuthProviderProperties;
+import com.app.backend.auth.infrastructure.oauth.OAuthTokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -27,15 +30,12 @@ public class GoogleOAuthClient implements OAuthClient {
         GoogleUserInfoResponse userInfoResponse =
                 requestUserInfo(tokenResponse.accessToken());
 
-        if (!Boolean.TRUE.equals(userInfoResponse.verifiedEmail())) {
-            throw new IllegalArgumentException("구글 로그인: 검증되지 않은 이메일입니다.");
-        }
-
         return new OAuthUserInfo(
                 OAuthProvider.GOOGLE,
                 userInfoResponse.id(),
                 userInfoResponse.email(),
-                userInfoResponse.name()
+                userInfoResponse.name(),
+                Boolean.TRUE.equals(userInfoResponse.verifiedEmail())
         );
     }
 
