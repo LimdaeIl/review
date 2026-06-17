@@ -11,6 +11,10 @@ public interface RefreshTokenRepository {
 
     void deleteByMemberId(Long memberId);
 
-    boolean rotateIfMatches(Long memberId, String expectedRefreshTokenHash,
-            String newRefreshTokenHash, Duration ttl);
+    RefreshTokenRotationResult rotateIfMatches(
+            Long memberId,
+            String expectedRefreshTokenHash,
+            String newRefreshTokenHash,
+            Duration ttl
+    );
 }
