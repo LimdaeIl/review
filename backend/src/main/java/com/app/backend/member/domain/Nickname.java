@@ -22,6 +22,10 @@ public class Nickname {
         this.nickname = nickname;
     }
 
+    public String getValue() {
+        return this.nickname;
+    }
+
     public static Nickname create(String value) {
         String normalized = normalize(value);
         validate(normalized);

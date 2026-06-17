@@ -10,7 +10,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
@@ -21,6 +20,10 @@ public class Email {
 
     @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
+
+    public String getValue() {
+        return this.email;
+    }
 
     private Email(String email) {
         this.email = email;
