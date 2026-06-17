@@ -2,12 +2,11 @@ package com.app.backend.member.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.regex.Pattern;
 
 @Getter
 @EqualsAndHashCode
@@ -18,7 +17,7 @@ public class Phone {
     private static final Pattern PHONE_PATTERN =
             Pattern.compile("^01[016789]\\d{7,8}$");
 
-    @Column(name = "phone", nullable = false, unique = true, length = 11)
+    @Column(name = "phone", unique = true, length = 11)
     private String phone;
 
     private Phone(String phone) {
@@ -27,6 +26,11 @@ public class Phone {
 
     public static Phone create(String value) {
         String normalized = normalize(value);
+
+        if (normalized == null || normalized.isBlank()) {
+            return null;
+        }
+
         validate(normalized);
 
         return new Phone(normalized);
@@ -44,10 +48,6 @@ public class Phone {
     }
 
     private static void validate(String value) {
-        if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException("회원: 휴대폰 번호는 필수입니다.");
-        }
-
         if (!PHONE_PATTERN.matcher(value).matches()) {
             throw new IllegalArgumentException("회원: 올바른 휴대폰 번호 형식이 아닙니다.");
         }
