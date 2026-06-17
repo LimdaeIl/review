@@ -10,4 +10,7 @@ public interface RefreshTokenRepository {
     Optional<String> findByMemberId(Long memberId);
 
     void deleteByMemberId(Long memberId);
+
+    boolean rotateIfMatches(Long memberId, String expectedRefreshTokenHash,
+            String newRefreshTokenHash, Duration ttl);
 }
