@@ -38,6 +38,7 @@ public record OAuthProviderProperties(
             String authorizationUri,
             String tokenUri,
             String userInfoUri,
+            String emailUri,
             String scope
     ) {
     }
