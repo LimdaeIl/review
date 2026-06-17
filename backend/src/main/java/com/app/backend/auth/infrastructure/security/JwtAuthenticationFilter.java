@@ -28,7 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authorization = request.getHeader(AUTHORIZATION_HEADER);
 
         if (authorization == null || !authorization.startsWith(AUTHORIZATION_HEADER_PREFIX)) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Authorization header");
+            filterChain.doFilter(request, response);
             return;
         }
 
