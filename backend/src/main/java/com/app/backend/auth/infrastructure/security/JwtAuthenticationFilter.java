@@ -36,8 +36,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         Long memberId = jwtProvider.getMemberIdFromAccessToken(accessToken);
         String role = jwtProvider.getRoleFromAccessToken(accessToken);
 
+        AuthMember authMember = new AuthMember(memberId, role);
+
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                memberId,
+                authMember,
                 null,
                 List.of(new SimpleGrantedAuthority(role))
         );
