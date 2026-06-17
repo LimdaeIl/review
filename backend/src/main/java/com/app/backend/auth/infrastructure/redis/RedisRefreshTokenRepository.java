@@ -1,6 +1,7 @@
 package com.app.backend.auth.infrastructure.redis;
 
 import com.app.backend.auth.domain.RefreshTokenRepository;
+import com.app.backend.auth.domain.RefreshTokenRotationResult;
 import com.app.backend.auth.exception.AuthErrorCode;
 import com.app.backend.auth.exception.AuthException;
 import java.time.Duration;
@@ -54,7 +55,7 @@ public class RedisRefreshTokenRepository implements RefreshTokenRepository {
     }
 
     @Override
-    public boolean rotateIfMatches(
+    public RefreshTokenRotationResult rotateIfMatches(
             Long memberId,
             String expectedRefreshTokenHash,
             String newRefreshTokenHash,
@@ -69,7 +70,7 @@ public class RedisRefreshTokenRepository implements RefreshTokenRepository {
                         return 0
                     end
                     if current ~= ARGV[1] then
-                        return 0
+                        return 2
                     end
                     redis.call('SET', KEYS[1], ARGV[2], 'PX', ARGV[3])
                     return 1
@@ -83,7 +84,15 @@ public class RedisRefreshTokenRepository implements RefreshTokenRepository {
                     String.valueOf(ttl.toMillis())
             );
 
-            return Long.valueOf(1L).equals(result);
+            if (Long.valueOf(1L).equals(result)) {
+                return RefreshTokenRotationResult.SUCCESS;
+            }
+
+            if (Long.valueOf(2L).equals(result)) {
+                return RefreshTokenRotationResult.MISMATCH;
+            }
+
+            return RefreshTokenRotationResult.NOT_FOUND;
         } catch (RedisConnectionFailureException | RedisSystemException e) {
             throw new AuthException(AuthErrorCode.TOKEN_STORE_UNAVAILABLE);
         }

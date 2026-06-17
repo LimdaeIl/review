@@ -2,6 +2,7 @@ package com.app.backend.auth.application;
 
 import com.app.backend.auth.application.result.ReissueTokenResult;
 import com.app.backend.auth.domain.RefreshTokenRepository;
+import com.app.backend.auth.domain.RefreshTokenRotationResult;
 import com.app.backend.auth.exception.AuthErrorCode;
 import com.app.backend.auth.exception.AuthException;
 import com.app.backend.auth.infrastructure.jwt.JWTHashUtil;
@@ -32,8 +33,10 @@ public class ReissueTokenService {
         Long memberId = jwtProvider.getMemberIdFromRefreshToken(refreshToken);
         Member member = memberCommandService.getMember(memberId);
 
-        String newAccessToken = jwtProvider.createAccessToken(member.getId(),
-                member.getRole().name());
+        String newAccessToken = jwtProvider.createAccessToken(
+                member.getId(),
+                member.getRole().getRole()
+        );
         String newRefreshToken = jwtProvider.createRefreshToken(member.getId());
 
         String hashedOldRefreshToken = jwtHashUtil.sha256(refreshToken);
@@ -42,20 +45,23 @@ public class ReissueTokenService {
         Duration refreshTokenTtl =
                 Duration.ofMillis(jwtProvider.getRefreshTokenExpirationMillis());
 
-        boolean rotated = refreshTokenRepository.rotateIfMatches(
+        RefreshTokenRotationResult rotationResult = refreshTokenRepository.rotateIfMatches(
                 member.getId(),
                 hashedOldRefreshToken,
                 hashedNewRefreshToken,
                 refreshTokenTtl
         );
 
-        if (!rotated) {
-            log.warn("Refresh token reuse detected. memberId={}", memberId);
-            refreshTokenRepository.deleteByMemberId(memberId);
-            throw new AuthException(AuthErrorCode.REUSED_REFRESH_TOKEN);
-        }
-
-        return new ReissueTokenResult(newAccessToken, newRefreshToken, refreshTokenTtl.toSeconds());
+        return switch (rotationResult) {
+            case SUCCESS -> new ReissueTokenResult(newAccessToken, newRefreshToken,
+                    refreshTokenTtl.toSeconds());
+            case NOT_FOUND -> throw new AuthException(AuthErrorCode.EXPIRED_REFRESH_TOKEN);
+            case MISMATCH -> {
+                log.warn("Refresh token reuse detected. memberId={}", memberId);
+                refreshTokenRepository.deleteByMemberId(memberId);
+                throw new AuthException(AuthErrorCode.REUSED_REFRESH_TOKEN);
+            }
+        };
     }
 
     private void validateRefreshToken(String refreshToken) {

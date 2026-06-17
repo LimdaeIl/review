@@ -16,8 +16,12 @@ Content-Type: application/json
 {
   "email": "test@example.com",
   "password": "password1234!"
-}
+
 
 ### 토큰 재발급
 POST http://localhost:8080/api/v1/auth/reissue
-Cookie: refreshToken=eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJiOTVlYWZmZC1jYTkyLTQ1OWUtODJiMy02NWUwMzkxMGEyNmMiLCJzdWIiOiIxIiwidG9rZW5UeXBlIjoiUkVGUkVTSCIsImlhdCI6MTc4MTY2NjA3NywiZXhwIjoxNzgyMjcwODc3fQ.sBaqnUhXQwdPdwd-d4AtLPgb_c-9mkNyxDZzUFaQ_8sJO9zlDlcUQwJYdlbiDJ7osNiWgUMNfjE6dzeH4YthNw
+Cookie: refreshToken=eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIzMThhYjgzOC01NzJkLTRiOTgtYjk4ZS00N2U1ODA0N2FiZGYiLCJzdWIiOiIxIiwidG9rZW5UeXBlIjoiUkVGUkVTSCIsImlhdCI6MTc4MTY3NDA5MCwiZXhwIjoxNzgyMjc4ODkwfQ.XEOf01rybg0kFms7E96goKIA4fBErNEaSL4Yu3cGPrVBch-wcLkl7F5IpxiGmvheCBXaDT_JeIEGAbtiT242Qw
+
+### 로그아웃
+POST http://localhost:8080/api/v1/auth/logout
+Cookie: refreshToken=eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJiODE2MDk3ZS1hZjFjLTQ0MDItYjk1NS1mNjhjNWY0MjU3OGEiLCJzdWIiOiIxIiwidG9rZW5UeXBlIjoiUkVGUkVTSCIsImlhdCI6MTc4MTY3NDEwOCwiZXhwIjoxNzgyMjc4OTA4fQ.CCpRE2YjP8dyCtyjHbfxV1rvOT_PquxkJuRZlCJw3i0HFryv7QE9k49rWyXsI-oX_7-4uy9yz5YDWE0-OAaxfA

@@ -1,6 +1,7 @@
 package com.app.backend.auth.presentation;
 
 import com.app.backend.auth.application.LoginService;
+import com.app.backend.auth.application.LogoutService;
 import com.app.backend.auth.application.ReissueTokenService;
 import com.app.backend.auth.application.SignupService;
 import com.app.backend.auth.application.result.LoginResult;
@@ -31,6 +32,7 @@ public class AuthController {
     private final LoginService loginService;
     private final RefreshTokenCookieProvider refreshTokenCookieProvider;
     private final ReissueTokenService reissueTokenService;
+    private final LogoutService logoutService;
 
     @PostMapping("/signup")
     public CommonResponse<SignupResponse> signup(
@@ -81,7 +83,23 @@ public class AuthController {
                 ReissueResponse.of(result.accessToken())
         );
     }
-        // TODO: 로그아웃, 카카오 로그인 추가
 
+    @PostMapping("/logout")
+    public CommonResponse<Void> logout(
+            @CookieValue(value = "refreshToken", required = false) String refreshToken,
+            HttpServletResponse response
+    ) {
+        logoutService.logout(refreshToken);
+
+        refreshTokenCookieProvider.removeRefreshTokenCookie(response);
+
+        return CommonResponse.success(
+                "로그아웃: 로그아웃에 성공하였습니다.",
+                null
+        );
+    }
+
+
+    // TODO: 카카오 로그인 추가
 
 }
