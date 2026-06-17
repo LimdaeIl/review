@@ -50,4 +50,12 @@ public class Credential extends BaseAuditEntity {
             throw new AuthException(AuthErrorCode.INVALID_PASSWORD);
         }
     }
+
+    public void changePassword(String encodedPassword) {
+        if (encodedPassword == null || encodedPassword.isBlank()) {
+            throw new AuthException(AuthErrorCode.INVALID_PASSWORD);
+        }
+
+        this.encodedPassword = encodedPassword;
+    }
 }

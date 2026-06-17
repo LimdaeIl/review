@@ -28,7 +28,9 @@ public enum AuthErrorCode implements ErrorCode {
     EMAIL_ALREADY_REGISTERED(HttpStatus.CONFLICT,
             "이미 해당 이메일로 가입된 계정이 있습니다. 기존 계정으로 로그인 후 소셜 계정을 연동해주세요."),
     OAUTH_EMAIL_NOT_VERIFIED(HttpStatus.UNAUTHORIZED, "소셜 로그인: 인증되지 않은 이메일입니다."),
-    OAUTH_EMAIL_REQUIRED(HttpStatus.BAD_REQUEST, "소셜 로그인: 이메일 제공 동의가 필요합니다."),;
+    OAUTH_EMAIL_REQUIRED(HttpStatus.BAD_REQUEST,
+            "소셜 로그인: 이메일 제공 동의가 필요합니다."), PASSWORD_LOGIN_NOT_AVAILABLE(HttpStatus.BAD_REQUEST,
+            "인증: 비밀번호 로그인을 사용할 수 없는 계정입니다.");
 
     private final HttpStatus httpStatus;
     private final String messageTemplate;
