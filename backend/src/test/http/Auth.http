@@ -16,12 +16,20 @@ Content-Type: application/json
 {
   "email": "test@example.com",
   "password": "password1234!"
+}
 
+### 구글 소셜 로그인 시작
+GET http://localhost:8080/api/v1/oauth/google/login
+
+### 구글 소셜 로그인 콜백 테스트
+# 실제 테스트는 /google/login으로 진입한 뒤 Google이 code를 붙여서 자동 호출합니다.
+# 수동 테스트하려면 브라우저 콜백 URL에서 code 값을 복사해서 넣으세요.
+GET http://localhost:8080/api/v1/oauth/google/callback?code=PASTE_GOOGLE_AUTHORIZATION_CODE
 
 ### 토큰 재발급
 POST http://localhost:8080/api/v1/auth/reissue
-Cookie: refreshToken=eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIzMThhYjgzOC01NzJkLTRiOTgtYjk4ZS00N2U1ODA0N2FiZGYiLCJzdWIiOiIxIiwidG9rZW5UeXBlIjoiUkVGUkVTSCIsImlhdCI6MTc4MTY3NDA5MCwiZXhwIjoxNzgyMjc4ODkwfQ.XEOf01rybg0kFms7E96goKIA4fBErNEaSL4Yu3cGPrVBch-wcLkl7F5IpxiGmvheCBXaDT_JeIEGAbtiT242Qw
+Cookie: refreshToken=PASTE_REFRESH_TOKEN
 
 ### 로그아웃
 POST http://localhost:8080/api/v1/auth/logout
-Cookie: refreshToken=eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJiODE2MDk3ZS1hZjFjLTQ0MDItYjk1NS1mNjhjNWY0MjU3OGEiLCJzdWIiOiIxIiwidG9rZW5UeXBlIjoiUkVGUkVTSCIsImlhdCI6MTc4MTY3NDEwOCwiZXhwIjoxNzgyMjc4OTA4fQ.CCpRE2YjP8dyCtyjHbfxV1rvOT_PquxkJuRZlCJw3i0HFryv7QE9k49rWyXsI-oX_7-4uy9yz5YDWE0-OAaxfA
+Cookie: refreshToken=PASTE_REFRESH_TOKEN

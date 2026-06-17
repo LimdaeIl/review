@@ -23,7 +23,8 @@ public enum AuthErrorCode implements ErrorCode {
 
     REUSED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "인증: 재사용된 Refresh Token입니다."),
     TOKEN_STORE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "인증: 토큰 저장소를 사용할 수 없습니다."),
-    REFRESH_TOKEN_REPLACED(HttpStatus.UNAUTHORIZED, "인증: 다른 환경에서 로그인되어 Refresh Token이 만료되었습니다.");
+    REFRESH_TOKEN_REPLACED(HttpStatus.UNAUTHORIZED, "인증: 다른 환경에서 로그인되어 Refresh Token이 만료되었습니다."),
+    UNSUPPORTED_OAUTH_PROVIDER(HttpStatus.BAD_REQUEST, "소셜 로그인: 지원하지 않는 provider입니다."),;
 
     private final HttpStatus httpStatus;
     private final String messageTemplate;
