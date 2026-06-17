@@ -1,7 +1,10 @@
-package com.app.backend.auth.infrastructure.oauth;
+package com.app.backend.auth.infrastructure.oauth.kakao;
 
 import com.app.backend.auth.domain.OAuthProvider;
 import com.app.backend.auth.domain.OAuthUserInfo;
+import com.app.backend.auth.infrastructure.oauth.OAuthClient;
+import com.app.backend.auth.infrastructure.oauth.OAuthProviderProperties;
+import com.app.backend.auth.infrastructure.oauth.OAuthTokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -27,19 +30,12 @@ public class KakaoOAuthClient implements OAuthClient {
         KakaoUserInfoResponse userInfoResponse =
                 requestUserInfo(tokenResponse.accessToken());
 
-        if (userInfoResponse.getEmail() == null || userInfoResponse.getEmail().isBlank()) {
-            throw new IllegalArgumentException("카카오 로그인: 이메일 제공 동의가 필요합니다.");
-        }
-
-        if (!Boolean.TRUE.equals(userInfoResponse.getEmailVerified())) {
-            throw new IllegalArgumentException("카카오 로그인: 검증되지 않은 이메일입니다.");
-        }
-
         return new OAuthUserInfo(
                 OAuthProvider.KAKAO,
                 userInfoResponse.getProviderUserId(),
                 userInfoResponse.getEmail(),
-                userInfoResponse.getNickname()
+                userInfoResponse.getNickname(),
+                Boolean.TRUE.equals(userInfoResponse.getEmailVerified())
         );
     }
 

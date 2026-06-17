@@ -1,4 +1,4 @@
-package com.app.backend.auth.infrastructure.oauth;
+package com.app.backend.auth.infrastructure.oauth.kakao;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

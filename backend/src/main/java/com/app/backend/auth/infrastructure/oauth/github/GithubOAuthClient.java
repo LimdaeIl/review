@@ -1,7 +1,10 @@
-package com.app.backend.auth.infrastructure.oauth;
+package com.app.backend.auth.infrastructure.oauth.github;
 
 import com.app.backend.auth.domain.OAuthProvider;
 import com.app.backend.auth.domain.OAuthUserInfo;
+import com.app.backend.auth.infrastructure.oauth.OAuthClient;
+import com.app.backend.auth.infrastructure.oauth.OAuthProviderProperties;
+import com.app.backend.auth.infrastructure.oauth.OAuthTokenResponse;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -28,19 +31,29 @@ public class GithubOAuthClient implements OAuthClient {
         GithubUserInfoResponse userInfoResponse =
                 requestUserInfo(tokenResponse.accessToken());
 
-        String email = resolveEmail(
-                tokenResponse.accessToken(),
-                userInfoResponse.email()
-        );
-
         String nickname = resolveNickname(userInfoResponse);
+        String email = resolvePrimaryVerifiedEmail(tokenResponse.accessToken());
 
         return new OAuthUserInfo(
                 OAuthProvider.GITHUB,
                 String.valueOf(userInfoResponse.id()),
                 email,
-                nickname
+                nickname,
+                true
         );
+    }
+
+    private String resolvePrimaryVerifiedEmail(String accessToken) {
+        GithubEmailResponse[] emails = requestEmails(accessToken);
+
+        return Arrays.stream(emails)
+                .filter(email -> Boolean.TRUE.equals(email.primary()))
+                .filter(email -> Boolean.TRUE.equals(email.verified()))
+                .map(GithubEmailResponse::email)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "깃허브 로그인: 검증된 기본 이메일이 필요합니다."
+                ));
     }
 
     private OAuthTokenResponse requestAccessToken(String code) {
@@ -70,23 +83,6 @@ public class GithubOAuthClient implements OAuthClient {
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .body(GithubUserInfoResponse.class);
-    }
-
-    private String resolveEmail(String accessToken, String userEmail) {
-        if (userEmail != null && !userEmail.isBlank()) {
-            return userEmail;
-        }
-
-        GithubEmailResponse[] emails = requestEmails(accessToken);
-
-        return Arrays.stream(emails)
-                .filter(email -> Boolean.TRUE.equals(email.primary()))
-                .filter(email -> Boolean.TRUE.equals(email.verified()))
-                .map(GithubEmailResponse::email)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "깃허브 로그인: 검증된 기본 이메일이 필요합니다."
-                ));
     }
 
     private GithubEmailResponse[] requestEmails(String accessToken) {
