@@ -4,10 +4,10 @@ import com.app.backend.auth.application.command.ChangePasswordCommand;
 import jakarta.validation.constraints.NotBlank;
 
 public record ChangePasswordRequest(
-        @NotBlank
+        @NotBlank(message = "현재 비밀번호는 필수입니다.")
         String currentPassword,
 
-        @NotBlank
+        @NotBlank(message = "새 비밀번호는 필수입니다.")
         String newPassword
 ) {
 
