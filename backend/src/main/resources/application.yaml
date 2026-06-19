@@ -80,3 +80,7 @@ oauth:
     user-info-uri: https://api.github.com/user
     email-uri: https://api.github.com/user/emails
     scope: read:user user:email
+
+app:
+  oauth:
+    frontend-callback-url: ${FRONTEND_OAUTH_CALLBACK_URL:http://localhost:5173/oauth/callback}
