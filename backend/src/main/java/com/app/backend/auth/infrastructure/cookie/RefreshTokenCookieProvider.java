@@ -16,8 +16,8 @@ public class RefreshTokenCookieProvider {
     ) {
         ResponseCookie cookie = ResponseCookie.from(REFRESH_TOKEN_COOKIE_NAME, refreshToken)
                 .httpOnly(true)
-                .secure(true)
-                .sameSite("Strict")
+                .secure(false)
+                .sameSite("Lax")
                 .path("/")
                 .maxAge(maxAgeSeconds)
                 .build();
@@ -28,8 +28,8 @@ public class RefreshTokenCookieProvider {
     public void removeRefreshTokenCookie(HttpServletResponse response) {
         ResponseCookie cookie = ResponseCookie.from(REFRESH_TOKEN_COOKIE_NAME, "")
                 .httpOnly(true)
-                .secure(true)
-                .sameSite("Strict")
+                .secure(false)
+                .sameSite("Lax")
                 .path("/")
                 .maxAge(0)
                 .build();
