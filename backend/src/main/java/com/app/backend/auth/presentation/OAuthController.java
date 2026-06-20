@@ -3,6 +3,7 @@ package com.app.backend.auth.presentation;
 import com.app.backend.auth.application.OAuthLoginService;
 import com.app.backend.auth.application.OAuthRedirectService;
 import com.app.backend.auth.application.command.OAuthLoginCommand;
+import com.app.backend.auth.application.result.LoginResult;
 import com.app.backend.auth.domain.OAuthProvider;
 import com.app.backend.auth.infrastructure.cookie.RefreshTokenCookieProvider;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,36 +18,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/oauth")
 @RestController
-public class OAuthController {
+public class OAuthController implements OAuthControllerDocs  {
 
     private final OAuthLoginService oauthLoginService;
     private final OAuthRedirectService oauthRedirectService;
     private final RefreshTokenCookieProvider refreshTokenCookieProvider;
 
     @GetMapping("/{provider}/login")
-    public void login(
-            @PathVariable String provider,
-            HttpServletResponse response
-    ) throws IOException {
+    public void login(@PathVariable String provider, HttpServletResponse response)
+            throws IOException {
         OAuthProvider oauthProvider = OAuthProvider.valueOf(provider.toUpperCase());
         response.sendRedirect(oauthRedirectService.getAuthorizationUrl(oauthProvider));
     }
 
     @GetMapping("/{provider}/callback")
-    public void callback(
-            @PathVariable String provider,
-            @RequestParam String code,
-            HttpServletResponse response
-    ) throws IOException {
+    public void callback(@PathVariable String provider, @RequestParam String code,
+            HttpServletResponse response) throws IOException {
         OAuthProvider oauthProvider = OAuthProvider.valueOf(provider.toUpperCase());
-        var result = oauthLoginService.login(new OAuthLoginCommand(oauthProvider, code));
-        refreshTokenCookieProvider.addRefreshTokenCookie(
-                response,
-                result.refreshToken(),
-                result.refreshTokenMaxAgeSeconds()
-        );
-        response.sendRedirect(oauthRedirectService.getFrontendCallbackUrl(
-                result.accessToken()
-        ));
+        LoginResult result = oauthLoginService.login(new OAuthLoginCommand(oauthProvider, code));
+        refreshTokenCookieProvider.addRefreshTokenCookie(response, result.refreshToken(),
+                result.refreshTokenMaxAgeSeconds());
+        response.sendRedirect(oauthRedirectService.getFrontendCallbackUrl(result.accessToken()));
     }
 }
